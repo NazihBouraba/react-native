@@ -35,7 +35,7 @@ export const fetchDishes = () => (dispatch) => {
 
     dispatch(dishesLoading());
 
-    return fetch(baseUrl + 'dishes')
+    return fetch("https://dishes.free.beeceptor.com/")
     .then(response => {
         if (response.ok) {
           return response;
