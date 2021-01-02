@@ -5,7 +5,7 @@ import {  FlatList } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
-
+import { Loading } from './LoadingComponent';
 
 const mapStateToProps = state => {
     return {
@@ -41,7 +41,36 @@ class About extends Component {
 
 
     render() {
-     return(
+        if (this.props.leaders.isLoading) {
+            return(
+                <ScrollView>
+                       <Text style={{margin: 10 , marginBottom : 2, textAlign: "center" ,fontWeight: "bold", fontSize : 30 }}>
+                          Our History {"\n"}
+                           </Text>
+                    <Card
+                        title='Corporate Leadership'>
+                        <Loading />
+                    </Card>
+                </ScrollView>
+            );
+        }
+        else if (this.props.leaders.errMess) {
+            return(
+                <ScrollView>
+                       <Text style={{margin: 10 , marginBottom : 2, textAlign: "center" ,fontWeight: "bold", fontSize : 30 }}>
+                         Our History {"\n"}
+                        </Text>
+                    <Card
+                        title='Corporate Leadership'>
+                        <Text>history....</Text>
+                    </Card>
+                </ScrollView>
+            );
+        }
+        else {
+
+
+      return(
 
         <ScrollView>
         <Card
@@ -60,7 +89,7 @@ class About extends Component {
             />
             <Text style={{margin: 10 , marginTop :50 , textJustify: "inter-word" ,textAlign: "left" }}>
     
-            {this.state.history.content} {"\n"}
+            history...{"\n"}
             </Text>
            
         </Card>
@@ -94,7 +123,7 @@ class About extends Component {
 
 
         </ScrollView>
-     )
+      )}
     }
 
 
