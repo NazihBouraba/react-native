@@ -6,6 +6,7 @@ import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './LoadingComponent';
+import * as Animatable from 'react-native-animatable';
 
 const mapStateToProps = state => {
     return {
@@ -44,6 +45,7 @@ class About extends Component {
         if (this.props.leaders.isLoading) {
             return(
                 <ScrollView>
+                    <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
                        <Text style={{margin: 10 , marginBottom : 2, textAlign: "center" ,fontWeight: "bold", fontSize : 30 }}>
                           Our History {"\n"}
                            </Text>
@@ -51,19 +53,22 @@ class About extends Component {
                         title='Corporate Leadership'>
                         <Loading />
                     </Card>
+                    </Animatable.View>
                 </ScrollView>
             );
         }
         else if (this.props.leaders.errMess) {
             return(
                 <ScrollView>
-                       <Text style={{margin: 10 , marginBottom : 2, textAlign: "center" ,fontWeight: "bold", fontSize : 30 }}>
-                         Our History {"\n"}
-                        </Text>
-                    <Card
-                        title='Corporate Leadership'>
-                        <Text>history....</Text>
-                    </Card>
+                     <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+                            <Text style={{margin: 10 , marginBottom : 2, textAlign: "center" ,fontWeight: "bold", fontSize : 30 }}>
+                                Our History {"\n"}
+                                </Text>
+                            <Card
+                                title='Corporate Leadership'>
+                                <Text>history....</Text>
+                            </Card>
+                    </Animatable.View>
                 </ScrollView>
             );
         }
@@ -73,55 +78,56 @@ class About extends Component {
       return(
 
         <ScrollView>
-        <Card
-        featuredTitle={"Our History"}
-        
-        >
-            <Text style={{margin: 10 , marginBottom : 2, textAlign: "center" ,fontWeight: "bold", fontSize : 30 }}>
-            Our History {"\n"}
-            </Text>
+             <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+                    <Card
+                    featuredTitle={"Our History"}
+                    
+                    >
+                        <Text style={{margin: 10 , marginBottom : 2, textAlign: "center" ,fontWeight: "bold", fontSize : 30 }}>
+                        Our History {"\n"}
+                        </Text>
 
-            <View
-            style={{
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-            }}
-            />
-            <Text style={{margin: 10 , marginTop :50 , textJustify: "inter-word" ,textAlign: "left" }}>
-    
-            history...{"\n"}
-            </Text>
-           
-        </Card>
-
-
-        <Card
-        featuredTitle={"Corporate Leadership"}
-        
-        >
-            <Text style={{margin: 10 , marginBottom : 2, textAlign: "center" ,fontWeight: "bold", fontSize : 30 }}>
-            Corporate Leadership {"\n"}
-            </Text>
-
-            <View
-            style={{
-                borderBottomColor: 'black',
-                borderBottomWidth: 1,
-            }}
-            />
+                        <View
+                        style={{
+                            borderBottomColor: 'black',
+                            borderBottomWidth: 1,
+                        }}
+                        />
+                        <Text style={{margin: 10 , marginTop :50 , textJustify: "inter-word" ,textAlign: "left" }}>
+                
+                        history...{"\n"}
+                        </Text>
+                    
+                    </Card>
 
 
-          <FlatList 
-           data={this.props.leaders.leaders}
-          renderItem={renderMenuItem}
-          keyExtractor={item => item.id.toString()}
-          />
-           
-        </Card>
+                    <Card
+                    featuredTitle={"Corporate Leadership"}
+                    
+                    >
+                        <Text style={{margin: 10 , marginBottom : 2, textAlign: "center" ,fontWeight: "bold", fontSize : 30 }}>
+                        Corporate Leadership {"\n"}
+                        </Text>
+
+                        <View
+                        style={{
+                            borderBottomColor: 'black',
+                            borderBottomWidth: 1,
+                        }}
+                        />
+
+
+                    <FlatList 
+                    data={this.props.leaders.leaders}
+                    renderItem={renderMenuItem}
+                    keyExtractor={item => item.id.toString()}
+                    />
+                    
+                    </Card>
 
 
 
-
+                    </Animatable.View>
         </ScrollView>
       )}
     }
