@@ -8,11 +8,10 @@ import { postFavorite } from '../Redux/ActionCreators';
 import {  Modal } from 'react-native';
 import { Rating } from 'react-native-elements';
 import { TextInput } from 'react-native';
+import { postcomment} from '../Redux/ActionCreators';
 
 
-function ratingCompleted(rating) {
-    console.log("Rating is: " + rating)
-  }
+
   
 
 function RenderRating(props){
@@ -21,8 +20,10 @@ function RenderRating(props){
 
     <View >
                 <Rating
-                  showRating
+                 showRating
                  onFinishRating = {value => props.updaterate(value)}
+                 onChange = {value => props.updaterate(value)}
+                 value ={props.state.rating}
                  style={{ paddingVertical: 10 , marginTop : 50 }}
                 />
 
@@ -77,7 +78,8 @@ const mapStateToProps = state => {
   }
 
 const mapDispatchToProps = dispatch => ({
-    postFavorite: (dishId) => dispatch(postFavorite(dishId))
+    postFavorite: (dishId) => dispatch(postFavorite(dishId)),
+    postcomment: (dishId,author,comment,rating) => dispatch(postcomment(dishId,author,comment,rating)),
 })
 
 
@@ -86,11 +88,12 @@ function Rendermodel(props){
    return(
         <Modal animationType = {"slide"} transparent = {false}
           visible = {props.v}
-          onDismiss = {console.log("") }
-          onRequestClose = {console.log("") }>
+          onDismiss = {()=>props.hide() }
+          onRequestClose = {()=>props.hide() }>
               <View >
                   <RenderRating
                   updaterate = {props.updaterate}
+                  state = {props.state}
                   />
                   <RenderTextinput  
                       updateauthor = {props.updateauthor}
@@ -102,7 +105,13 @@ function Rendermodel(props){
                 <View >
                 <View style ={{margin:20 }}></View>
                     <Button 
-                         onPress = {() =>{props.updateauthor("nazih")}}
+                     onPress = {() =>{ props.post(props.maxid,props.dishId,props.state.author,props.state.comment,props.state.rating), 
+                  //  console.log(props.state.rating.value,"le rating est"),
+                    props.hide()
+                    }
+                       
+                          
+                    }
                           color="#512DA8"
                          title="Submit" 
                     /> 
@@ -200,12 +209,14 @@ class DishDetail extends Component {
         this.state= {
             author : "ll",
             comment :"",
-            rating :0,
-            showModal: true
+            rating :3,
+            showModal: false,
+            
         }
         this.updateauthor = this.updateauthor.bind(this)
         this.updatecomment = this.updatecomment.bind(this)
         this.updaterate = this.updaterate.bind(this)
+        this.post = this.post.bind(this)
         
     }
     updateauthor(value){
@@ -218,8 +229,7 @@ class DishDetail extends Component {
  
      }
      updaterate(value){
-        this.setState({rating : value})
-        console.log(this.state.rating)
+        this.setState({rating : {value}})
  
      }
 
@@ -227,9 +237,13 @@ class DishDetail extends Component {
         this.props.postFavorite(dishId);
     }
 
+    post(dishId,author,comment,rating){
+        this.props.postcomment(dishId,author,comment,rating);
+    }
+
     toggleModel(){
         this.setState({ showModal : !this.state.showModal})
-        console.log(this.state.showModal,"updationg")
+        
     }
 
     static navigationOptions = {
@@ -239,7 +253,10 @@ class DishDetail extends Component {
     render() {
 
         const dishId = this.props.navigation.getParam('dishId','');
-
+   
+        const idarray = this.props.comments.comments.map(  el=> Number(el.dishId))
+        const maxid = Math.max.apply(Math , idarray) +1 
+    
    
 
             return(
@@ -251,6 +268,10 @@ class DishDetail extends Component {
                 updateauthor = {this.updateauthor}
                 updatecomment = {this.updatecomment}
                 updaterate = {this.updaterate}
+                state= {this.state}
+                post = {this.post}
+                dishId = {dishId}
+                maxid ={maxid}
              
                 />
 
