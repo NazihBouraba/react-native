@@ -1,5 +1,5 @@
 import React , {Component} from 'react';
-import { Text, View,Button,StyleSheet, Alert, PanResponder } from 'react-native';
+import { Text, View,Button,StyleSheet, Alert, PanResponder, Share } from 'react-native';
 import { Card , Icon} from 'react-native-elements';
 import {  ScrollView, FlatList } from 'react-native';
 import { connect } from 'react-redux';
@@ -145,6 +145,15 @@ function RenderDish(props) {
             return false;
     }
 
+    const shareDish = (title, message, url) => {
+        Share.share({
+            title: title,
+            message: title + ': ' + message + ' ' + url,
+            url: url
+        },{
+            dialogTitle: 'Share ' + title
+        })
+    }
 
     const recognizeComment = ({ moveX, moveY, dx, dy }) => {
         if ( dx > 200 ){
@@ -225,6 +234,16 @@ const nazih = PanResponder.create({
                         color='#512DA8'
                         onPress={() =>props.comment() }
                         />
+                         <Icon
+                            raised
+                            reverse
+                            name='share'
+                            type='font-awesome'
+                            color='#51D2A8'
+                            style={styles.cardItem}
+                            onPress={() => shareDish(dish.name, dish.description, baseUrl + dish.image)} />
+                            
+
                  </View>
              </Card>
              </Animatable.View>
@@ -329,7 +348,7 @@ class DishDetail extends Component {
   
 
 
-     
+   
    
         const idarray = this.props.comments.comments.map(  el=> Number(el.dishId))
         const maxid = Math.max.apply(Math , idarray) +1 

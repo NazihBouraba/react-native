@@ -5,7 +5,7 @@ import DatePicker from 'react-native-datepicker'
 import {  Modal } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {  Notifications } from 'expo';
-import {Permissions } from 'expo-permissions'
+import * as Permissions from 'expo-permissions';
 
 class Reservation extends Component {
 
