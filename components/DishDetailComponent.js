@@ -1,5 +1,5 @@
 import React , {Component} from 'react';
-import { Text, View,Button,StyleSheet } from 'react-native';
+import { Text, View,Button,StyleSheet, Alert, PanResponder } from 'react-native';
 import { Card , Icon} from 'react-native-elements';
 import {  ScrollView, FlatList } from 'react-native';
 import { connect } from 'react-redux';
@@ -135,10 +135,71 @@ function Rendermodel(props){
 function RenderDish(props) {
 
     const dish = props.dish;
+
+    handleViewRef = ref => this.view = ref;
+
+    const recognizeDrag = ({ moveX, moveY, dx, dy }) => {
+        if ( dx < -200 )
+            return true;
+        else
+            return false;
+    }
+
+
+    const recognizeComment = ({ moveX, moveY, dx, dy }) => {
+        if ( dx > 200 ){
+            console.log("gesssssssssssssssssssssssssssssture")
+            return true;
+        }
+        else
+            return false;
+    }
+  
+
+  
+
+
+
+const nazih = PanResponder.create({
+    onStartShouldSetPanResponder: (e, gestureState) => {
+        return true;
+    },
+    onPanResponderGrant: () => {
+        this.view.rubberBand(1000).then(endState => console.log(endState.finished ? 'finished' : 'cancelled'));},
+
+    onPanResponderEnd: (e, gestureState) => {
+        console.log("pan responder end", gestureState);
+        if (recognizeDrag(gestureState)){
+            Alert.alert(
+                'Add Favorite',
+                'Are you sure you wish to add ' + dish.name + ' to favorite?',
+                [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'OK', onPress: () => {props.favorite ? console.log('Already favorite') : props.onPress()}},
+                ],
+                { cancelable: false }
+            );
+        }
+        else if (recognizeComment(gestureState)){
+
+                props.comment()
+        }
+
+        return true;
+    }
+})
+
+
+      
+     
+        
+       
     
         if (dish != null) {
+            
             return(
-                <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+               
+                <Animatable.View animation="fadeInDown" duration={2000} delay={1000} ref={this.handleViewRef}  {...nazih.panHandlers}   >
                 <Card
                 featuredTitle={dish.name}
                 image={{uri: baseUrl + dish.image}}>
@@ -254,9 +315,21 @@ class DishDetail extends Component {
         title: 'DishDetail'
     };
 
+   
+
+
+
+ 
+
+
     render() {
 
         const dishId = this.props.navigation.getParam('dishId','');
+
+  
+
+
+     
    
         const idarray = this.props.comments.comments.map(  el=> Number(el.dishId))
         const maxid = Math.max.apply(Math , idarray) +1 
@@ -267,7 +340,7 @@ class DishDetail extends Component {
             
                  
            
-                <ScrollView>
+                <ScrollView >
                 <Rendermodel v={this.state.showModal}  hide={()=>this.toggleModel()} 
                 updateauthor = {this.updateauthor}
                 updatecomment = {this.updatecomment}
@@ -281,11 +354,14 @@ class DishDetail extends Component {
 
 
 
-                <RenderDish dish={this.props.dishes.dishes[+dishId]}
+                <RenderDish dish={this.props.dishes.dishes[+dishId]} 
+                   
                     favorite={this.props.favorites.some(el => el === dishId)}
                     onPress={() => this.markFavorite(dishId)} 
                     comment = {()=> this.toggleModel()}
-    
+               
+                   
+                    
                     />
                 <RenderComments comments={this.props.comments.comments.filter((comment) => comment.dishId === dishId)} />
                </ScrollView>

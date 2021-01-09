@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button,Alert } from 'react-native';
 import { Card } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker'
 import {  Modal } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
 class Reservation extends Component {
 
@@ -17,13 +18,31 @@ class Reservation extends Component {
         }
     }
 
+    shoowalert(){
+        Alert.alert(
+            'Reservation infos',
+            'your inputs are \n ' 
+            + 'number of guests : '+ this.state.guests +'\n'
+            + 'smoking :'+ this.state.smoking + '\n'
+            + 'date :'+ this.state.date
+            ,
+            [
+            {text: 'Cancel', onPress: () => this.resetForm(), style: 'cancel'},
+            {text: 'OK', onPress: () => {this.resetForm()}}
+            ],
+            { cancelable: false }
+        );
+    }
+
+
     toggleModal() {
         this.setState({showModal: !this.state.showModal});
     }
 
     handleReservation() {
         console.log(JSON.stringify(this.state));
-        this.toggleModal();
+        //this.toggleModal();
+        this.shoowalert()
     }
 
     resetForm() {
@@ -42,6 +61,7 @@ class Reservation extends Component {
 
     handleReservation() {
         console.log(JSON.stringify(this.state));
+        this.shoowalert()
         this.setState({
             guests: 1,
             smoking: false,
@@ -51,6 +71,7 @@ class Reservation extends Component {
     
     render() {
         return(
+            <Animatable.View animation="zoomIn" duration={2000} delay={1000}   >
             <ScrollView>
                 <View style={styles.formRow}>
                 <Text style={styles.formLabel}>Number of Guests</Text>
@@ -128,6 +149,7 @@ class Reservation extends Component {
                     </View>
                 </Modal>
             </ScrollView>
+            </Animatable.View>
         );
     }
 
